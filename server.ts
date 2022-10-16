@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 
 require("dotenv").config();
 
@@ -11,6 +12,7 @@ const { DB_URL, PORT } = process.env;
 const products = require("./routes/products");
 
 const app = express();
+app.use(cors());
 
 // Body parser
 app.use(express.json());
