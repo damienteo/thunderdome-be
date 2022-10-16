@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { IProduct } from "../interfaces/product";
+import { IProduct } from "../utils/interfaces/IProduct";
 
 interface ProductDoc extends mongoose.Document<IProduct> {}
 
