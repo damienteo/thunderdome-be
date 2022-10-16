@@ -24,7 +24,6 @@ const productSchema = new mongoose.Schema(
     },
     tokenId: {
       type: Number,
-      required: true,
     },
     owner: {
       type: String,

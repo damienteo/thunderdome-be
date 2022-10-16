@@ -19,7 +19,7 @@ export const listenForTransfer = async () => {
     const info = {
       from,
       to,
-      tokenId,
+      tokenId: ethers.utils.formatUnits(tokenId, 0),
     };
     console.log({ info });
   });

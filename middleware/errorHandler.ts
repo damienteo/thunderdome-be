@@ -4,7 +4,7 @@ interface IError extends Error {
   statusCode: number;
 }
 
-const errorHandler = (
+export const errorHandler = (
   err: IError,
   req: Request,
   res: Response,
@@ -18,5 +18,3 @@ const errorHandler = (
     .status(error.statusCode || 500)
     .json({ success: false, error: error.message || "Server Error" });
 };
-
-module.exports = errorHandler;

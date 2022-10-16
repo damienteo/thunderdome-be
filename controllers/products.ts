@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 import { Product } from "../models/products";
 
-const asyncHandler = require("../utils/asyncHandler");
-const ErrorResponse = require("../utils/errorResponse");
+const asyncHandler = require("../utils/methods/asyncHandler");
+const ErrorResponse = require("../utils/methods/errorResponse");
 
 // @desc    Get all products
 // @route   GET /api/v1/products
