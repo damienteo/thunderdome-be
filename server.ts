@@ -24,7 +24,7 @@ app.use("/api/v1/products", products);
 // Handle cases where errors are thrown
 app.use(errorHandler);
 
-mongoose.connect(DB_URL || "mongodb://localhost:27017/products", {}, () => {
+mongoose.connect(DB_URL || "mongodb://localhost:27017/thunderdome", {}, () => {
   console.log("Connected to Mongo!");
 });
 
