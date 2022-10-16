@@ -1,5 +1,8 @@
+const mongoose = require("mongoose");
 const ethers = require("ethers");
+
 const ThunderDomeNFTJson = require("../abis/ThunderDomeNFT.json");
+const { Product } = require("../../models/products");
 
 require("dotenv").config();
 
@@ -15,12 +18,22 @@ export const listenForTransfer = async () => {
     provider
   );
 
-  contract.on("Transfer", (from: string, to: string, tokenId: number) => {
+  contract.on("Transfer", async (from: string, to: string, tokenId: number) => {
     const info = {
       from,
       to,
       tokenId: ethers.utils.formatUnits(tokenId, 0),
     };
-    console.log({ info });
+
+    const tokenURI = await contract.tokenURI(info.tokenId);
+
+    const splitURI = tokenURI.split("/");
+    const name = splitURI[splitURI.length - 1];
+
+    const data = await Product.findOne({ name });
+
+    if (data) {
+      const receipt = await Product.findOneAndUpdate({ name }, { owner: to });
+    }
   });
 };
