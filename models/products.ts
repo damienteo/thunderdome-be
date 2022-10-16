@@ -2,13 +2,7 @@ import mongoose from "mongoose";
 
 import { IProduct } from "../utils/interfaces/IProduct";
 
-interface ProductDoc extends mongoose.Document<IProduct> {}
-
-interface ProductModelInterface extends mongoose.Model<ProductDoc> {
-  build(attr: IProduct): ProductDoc;
-}
-
-const productSchema = new mongoose.Schema(
+const productSchema = new mongoose.Schema<IProduct>(
   {
     name: {
       type: String,
@@ -33,11 +27,6 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-productSchema.statics.build = (attr: IProduct) => new Product(attr);
-
-const Product = mongoose.model<any, ProductModelInterface>(
-  "Product",
-  productSchema
-);
+const Product = mongoose.model<IProduct>("Product", productSchema);
 
 export { Product };
