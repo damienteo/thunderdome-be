@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 
+import { listenForTransfer } from "./listeners/transferListener";
+
 require("dotenv").config();
 
 const errorHandler = require("./middleware/errorHandler");
@@ -27,5 +29,8 @@ app.use(errorHandler);
 mongoose.connect(DB_URL || "mongodb://localhost:27017/thunderdome", {}, () => {
   console.log("Connected to Mongo!");
 });
+
+// listeners
+listenForTransfer();
 
 app.listen(PORT, () => console.log(`Server up on Port: ${PORT}`));
