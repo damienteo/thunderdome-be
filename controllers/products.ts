@@ -10,7 +10,7 @@ const ErrorResponse = require("../utils/methods/errorResponse");
 // @access  Public
 exports.getProducts = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const data = await Product.find({});
+    const data = await Product.find({}).sort({ tokenId: 1 });
 
     res.status(200).json({
       success: true,
