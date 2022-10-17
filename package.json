@@ -7,7 +7,8 @@
     "dev": "nodemon server.ts",
     "build": "tsc",
     "start": "node ./dist/server.js",
-    "seed": "ts-node seed/seed-pokemon.ts"
+    "seed": "ts-node scripts/seed-pokemon.ts",
+    "update-owners": "ts-node scripts/update-pokemon-owner.ts"
   },
   "keywords": [],
   "author": "",
