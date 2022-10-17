@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const ethers = require("ethers");
 
 const ThunderDomeNFTJson = require("../abis/ThunderDomeNFT.json");
@@ -6,10 +5,10 @@ const { Product } = require("../../models/products");
 
 require("dotenv").config();
 
-const { WEB_SOCKET_PROVIDER } = process.env;
+const { WEB_SOCKET_PROVIDER, THUNDERDOME_NFT_ADDRESS } = process.env;
 
 export const listenForTransfer = async () => {
-  const ThunderDomeNFTAddress = process.env.THUNDERDOME_NFT_ADDRESS;
+  const ThunderDomeNFTAddress = THUNDERDOME_NFT_ADDRESS;
   const provider = new ethers.providers.WebSocketProvider(WEB_SOCKET_PROVIDER);
 
   const contract = new ethers.Contract(
@@ -24,7 +23,7 @@ export const listenForTransfer = async () => {
       to,
       tokenId: ethers.utils.formatUnits(tokenId, 0),
     };
-
+    console.log({ info });
     const tokenURI = await contract.tokenURI(info.tokenId);
 
     const splitURI = tokenURI.split("/");
@@ -33,7 +32,12 @@ export const listenForTransfer = async () => {
     const data = await Product.findOne({ name });
 
     if (data) {
-      const receipt = await Product.findOneAndUpdate({ name }, { owner: to });
+      await Product.findOneAndUpdate(
+        { name },
+        { owner: to, tokenId: info.tokenId }
+      );
     }
   });
+
+  console.log("Running Transfer Listener");
 };
