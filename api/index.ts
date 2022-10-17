@@ -2,8 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import { listenForTransfer } from "./utils/listeners/transferListener";
-import { errorHandler } from "./middleware/errorHandler";
+import { listenForTransfer } from "../utils/listeners/transferListener";
+import { errorHandler } from "../middleware/errorHandler";
 
 require("dotenv").config();
 

@@ -5,16 +5,11 @@ import { Product } from "../models/products";
 const asyncHandler = require("../utils/methods/asyncHandler");
 const ErrorResponse = require("../utils/methods/errorResponse");
 
-require("dotenv").config();
-
-const { DB_URL } = process.env;
-
 // @desc    Get all products
 // @route   GET /api/v1/products
 // @access  Public
 exports.getProducts = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log({ DB_URL });
     const data = await Product.find({}).sort({ tokenId: 1 });
 
     res.status(200).json({
