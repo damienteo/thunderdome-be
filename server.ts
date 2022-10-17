@@ -9,6 +9,8 @@ require("dotenv").config();
 
 const { DB_URL, PORT } = process.env;
 
+console.log({ DB_URL });
+
 // Routes
 const products = require("./routes/products");
 

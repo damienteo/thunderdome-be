@@ -7,6 +7,8 @@ const { IPokemonSeedDetails } = require("../utils/interfaces/IPokemonDetails");
 const POKEMON_DETAILS = require("../constants/pokemon");
 const { ZERO_ADDRESS } = require("../constants/common");
 
+require("dotenv").config();
+
 const { DB_URL } = process.env;
 
 mongoose.connect(DB_URL || "mongodb://localhost:27017/thunderdome", {}, () => {
