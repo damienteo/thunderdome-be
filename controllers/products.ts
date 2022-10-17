@@ -5,6 +5,12 @@ import { Product } from "../models/products";
 const asyncHandler = require("../utils/methods/asyncHandler");
 const ErrorResponse = require("../utils/methods/errorResponse");
 
+require("dotenv").config();
+
+const { DB_URL } = process.env;
+
+console.log({ DB_URL });
+
 // @desc    Get all products
 // @route   GET /api/v1/products
 // @access  Public
