@@ -9,13 +9,12 @@ require("dotenv").config();
 
 const { DB_URL } = process.env;
 
-console.log({ DB_URL });
-
 // @desc    Get all products
 // @route   GET /api/v1/products
 // @access  Public
 exports.getProducts = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log({ DB_URL });
     const data = await Product.find({}).sort({ tokenId: 1 });
 
     res.status(200).json({
