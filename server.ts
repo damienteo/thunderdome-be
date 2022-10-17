@@ -30,7 +30,7 @@ mongoose.connect(DB_URL || "mongodb://localhost:27017/thunderdome", {}, () => {
 });
 
 // listeners
-// listenForTransfer();
+listenForTransfer();
 
 app.listen(PORT, () => console.log(`Server up on Port: ${PORT}`));
 
