@@ -1,22 +1,22 @@
 import { Request, Response, NextFunction } from "express";
-const ethers = require("ethers");
+// const ethers = require("ethers");
 
 import { Product } from "../models/products";
 
 const asyncHandler = require("../utils/methods/asyncHandler");
 const ErrorResponse = require("../utils/methods/errorResponse");
-const ThunderDomeNFTJson = require("../utils/abis/ThunderDomeNFT.json");
+// const ThunderDomeNFTJson = require("../utils/abis/ThunderDomeNFT.json");
 
-const { WEB_SOCKET_PROVIDER, THUNDERDOME_NFT_ADDRESS, DB_URL } = process.env;
+// const { WEB_SOCKET_PROVIDER, THUNDERDOME_NFT_ADDRESS, DB_URL } = process.env;
 
-const ThunderDomeNFTAddress = THUNDERDOME_NFT_ADDRESS;
-const provider = new ethers.providers.WebSocketProvider(WEB_SOCKET_PROVIDER);
+// const ThunderDomeNFTAddress = THUNDERDOME_NFT_ADDRESS;
+// const provider = new ethers.providers.WebSocketProvider(WEB_SOCKET_PROVIDER);
 
-const contract = new ethers.Contract(
-  ThunderDomeNFTAddress,
-  ThunderDomeNFTJson.abi,
-  provider
-);
+// const contract = new ethers.Contract(
+//   ThunderDomeNFTAddress,
+//   ThunderDomeNFTJson.abi,
+//   provider
+// );
 
 // @desc    Get all products
 // @route   GET /api/v1/products
