@@ -13,6 +13,7 @@ const { DB_URL, PORT } = process.env;
 
 // Routes
 const products = require("./routes/products");
+const transactions = require("./routes/transactions");
 
 const app = express();
 app.use(cors());
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Mount Routers
 app.use("/api/v1/products", products);
+app.use("/api/v1/transactions", transactions);
 
 // Handle cases where errors are thrown
 app.use(errorHandler);
