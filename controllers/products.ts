@@ -69,12 +69,15 @@ exports.getSingleProductJson = asyncHandler(
   }
 );
 
+//TODO: req.body is empty, but FE did send tokenId in body
+
 // @desc    Update single product owner
 // @route   PATCH /api/v1/products/:name
 // @access  Public
 exports.updateSingleProductOwner = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { tokenId } = req.params;
+    const { tokenId } = req.body;
+    console.log({ req: req.body });
     const data = await Product.findOne({ tokenId });
     if (!data) {
       return next(
@@ -83,11 +86,16 @@ exports.updateSingleProductOwner = asyncHandler(
     }
 
     const nextOwner = await contract.ownerOf(tokenId);
+    let result;
     if (nextOwner !== data.owner) {
-      await Product.findOneAndUpdate({ tokenId }, { owner: nextOwner });
+      result = await Product.findOneAndUpdate(
+        { tokenId },
+        { owner: nextOwner }
+      );
     }
+    console.log({ result });
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       data,
     });
@@ -105,7 +113,7 @@ exports.createSingleProduct = asyncHandler(
 
     await product.save();
 
-    return res.status(201).json({
+    return res.status(204).json({
       success: true,
       data: product,
     });

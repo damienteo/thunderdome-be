@@ -16,7 +16,7 @@ router.route("/json/:name").get(getSingleProductJson);
 
 router.route("/").get(getProducts);
 
-router.route("/update-owner").patch(updateSingleProductOwner);
+// router.route("/update-owner").patch(updateSingleProductOwner);
 
 // router.route("/").post(createSingleProduct);
 

@@ -30,6 +30,9 @@ mongoose.connect(DB_URL || "mongodb://localhost:27017/thunderdome", {}, () => {
 });
 
 // listeners
+// Error with ethereum:
+// TypeError: Cannot set property 'onopen' of undefined
+// Oct 18 03:05:28 AM      at new WebSocketProvider (/opt/render/project/src/node_modules/@ethersproject/providers/lib/websocket-provider.js:108:32)
 // listenForTransfer();
 
 app.listen(PORT, () => console.log(`Server up on Port: ${PORT}`));
