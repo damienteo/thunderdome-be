@@ -10,7 +10,9 @@ const asyncHandler = require("../utils/methods/asyncHandler");
 exports.getTransactions = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { address } = req.body;
-    const data = await Transaction.find({ from: address });
+    const data = await Transaction.find({ from: address })
+      .sort({ _id: -1 })
+      .limit(5);
 
     res.status(200).json({
       success: true,
