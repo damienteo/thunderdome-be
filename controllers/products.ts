@@ -74,33 +74,33 @@ exports.getSingleProductJson = asyncHandler(
 // @desc    Update single product owner
 // @route   PATCH /api/v1/products/:name
 // @access  Public
-exports.updateSingleProductOwner = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { tokenId } = req.body;
-    console.log({ req: req.body });
-    const data = await Product.findOne({ tokenId });
-    if (!data) {
-      return next(
-        new ErrorResponse(`Product by name of '${name}' not found`, 404)
-      );
-    }
+// exports.updateSingleProductOwner = asyncHandler(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const { tokenId } = req.body;
+//     console.log({ req: req.body });
+//     const data = await Product.findOne({ tokenId });
+//     if (!data) {
+//       return next(
+//         new ErrorResponse(`Product by name of '${name}' not found`, 404)
+//       );
+//     }
 
-    const nextOwner = await contract.ownerOf(tokenId);
-    let result;
-    if (nextOwner !== data.owner) {
-      result = await Product.findOneAndUpdate(
-        { tokenId },
-        { owner: nextOwner }
-      );
-    }
-    console.log({ result });
+//     const nextOwner = await contract.ownerOf(tokenId);
+//     let result;
+//     if (nextOwner !== data.owner) {
+//       result = await Product.findOneAndUpdate(
+//         { tokenId },
+//         { owner: nextOwner }
+//       );
+//     }
+//     console.log({ result });
 
-    res.status(201).json({
-      success: true,
-      data,
-    });
-  }
-);
+//     res.status(201).json({
+//       success: true,
+//       data,
+//     });
+//   }
+// );
 
 // @desc    Create single product
 // @route   POST /api/v1/products
