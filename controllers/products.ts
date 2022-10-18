@@ -77,7 +77,7 @@ exports.getSingleProductJson = asyncHandler(
 exports.updateSingleProductOwner = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { tokenId } = req.body;
-    console.log({ req: req.body });
+
     const data = await Product.findOne({ tokenId });
     if (!data) {
       return next(
@@ -93,7 +93,6 @@ exports.updateSingleProductOwner = asyncHandler(
         { owner: nextOwner }
       );
     }
-    console.log({ result });
 
     res.status(201).json({
       success: true,

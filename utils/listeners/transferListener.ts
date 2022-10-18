@@ -23,7 +23,7 @@ export const listenForTransfer = async () => {
       to,
       tokenId: ethers.utils.formatUnits(tokenId, 0),
     };
-    console.log({ info });
+
     const tokenURI = await contract.tokenURI(info.tokenId);
 
     const splitURI = tokenURI.split("/");
