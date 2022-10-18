@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from "express";
 const ethers = require("ethers");
 
 import { Product } from "../models/products";
+import { Transaction } from "../models/transactions";
+
+import { TransactionType } from "../utils/interfaces/ITransaction";
 
 const asyncHandler = require("../utils/methods/asyncHandler");
 const ErrorResponse = require("../utils/methods/errorResponse");
@@ -76,7 +79,7 @@ exports.getSingleProductJson = asyncHandler(
 // @access  Public
 exports.updateSingleProductOwner = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { tokenId } = req.body;
+    const { tokenId, txDetails } = req.body;
 
     const data = await Product.findOne({ tokenId });
     if (!data) {
@@ -88,10 +91,18 @@ exports.updateSingleProductOwner = asyncHandler(
     const nextOwner = await contract.ownerOf(tokenId);
     let result;
     if (nextOwner !== data.owner) {
+      // Update owner for token id
       result = await Product.findOneAndUpdate(
         { tokenId },
         { owner: nextOwner }
       );
+
+      // Save transaction to database
+      const nextTransaction = new Transaction({
+        ...txDetails,
+        category: TransactionType.TokenSalePurchase,
+      });
+      nextTransaction.save();
     }
 
     res.status(201).json({
