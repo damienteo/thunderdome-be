@@ -1,5 +1,8 @@
+const dotenv = require("dotenv");
+const path = require("path");
+
 module.exports = {
-  NODE_ENV: process.env.NODE_ENV,
+  NODE_ENV: process.env.NODE_ENV || "dev",
   PORT: process.env.PORT,
   db: {
     DATABASE: process.env.DB_DATABASE,

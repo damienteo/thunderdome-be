@@ -5,7 +5,9 @@ import cors from "cors";
 import { listenForTransfer } from "./utils/listeners/transferListener";
 import { errorHandler } from "./middleware/errorHandler";
 
-require("dotenv").config();
+const path = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env";
+
+require("dotenv").config({ path });
 
 const { DB_URL, PORT } = process.env;
 
