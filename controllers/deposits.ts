@@ -27,14 +27,17 @@ const contract = new ethers.Contract(
 // @access  Public
 exports.getDeposits = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { address } = req.body;
-    const data = await Deposit.find({ from: address })
+    const data = await Deposit.find({ ...req.body })
       .sort({ _id: 1 })
       .limit(6);
 
+    const nextData = await Promise.all(
+      data.map(async ({ tokenId }) => await Product.find({ tokenId }))
+    );
+
     res.status(200).json({
       success: true,
-      data,
+      data: nextData.flat(),
     });
   }
 );

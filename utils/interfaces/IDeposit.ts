@@ -1,5 +1,5 @@
 export interface IDeposit {
-  from: string;
+  owner: string;
   transactionHash: string;
-  tokenId?: number;
+  tokenId: number;
 }

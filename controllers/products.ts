@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 const ethers = require("ethers");
 
+import { Deposit } from "../models/deposits";
 import { Product } from "../models/products";
 import { Transaction } from "../models/transactions";
 
@@ -10,7 +11,12 @@ const asyncHandler = require("../utils/methods/asyncHandler");
 const ErrorResponse = require("../utils/methods/errorResponse");
 const ThunderDomeNFTJson = require("../utils/abis/ThunderDomeNFT.json");
 
-const { WEB_SOCKET_PROVIDER, THUNDERDOME_NFT_ADDRESS, DB_URL } = process.env;
+const {
+  WEB_SOCKET_PROVIDER,
+  THUNDERDOME_NFT_ADDRESS,
+  POKEMON_CENTER_ADDRESS,
+  DB_URL,
+} = process.env;
 
 const ThunderDomeNFTAddress = THUNDERDOME_NFT_ADDRESS;
 const provider = new ethers.providers.WebSocketProvider(WEB_SOCKET_PROVIDER);
@@ -26,7 +32,7 @@ const contract = new ethers.Contract(
 // @access  Public
 exports.getProducts = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const data = await Product.find({}).sort({ tokenId: 1 });
+    const data = await Product.find({ ...req.body }).sort({ tokenId: 1 });
 
     res.status(200).json({
       success: true,
@@ -72,6 +78,23 @@ exports.getSingleProductJson = asyncHandler(
   }
 );
 
+const getCategories = (props: {
+  nextOwner?: string;
+  prevOwner?: string;
+  from?: string;
+  to?: string;
+}) => {
+  const { nextOwner, to, from } = props;
+
+  if (nextOwner === POKEMON_CENTER_ADDRESS)
+    return TransactionType.StakingDeposit;
+
+  if (to === POKEMON_CENTER_ADDRESS && nextOwner === from)
+    return TransactionType.StakingWithdrawal;
+
+  return TransactionType.TokenSalePurchase;
+};
+
 // @desc    Update single product owner
 // @route   PATCH /api/v1/products/
 // @access  Public
@@ -87,7 +110,10 @@ exports.updateSingleProductOwner = asyncHandler(
     }
 
     const nextOwner = await contract.ownerOf(tokenId);
+    const { to, from } = txDetails;
+
     let result;
+    // verify that there had been a change
     if (nextOwner !== data.owner) {
       // Update owner for token id
       result = await Product.findOneAndUpdate(
@@ -95,12 +121,28 @@ exports.updateSingleProductOwner = asyncHandler(
         { owner: nextOwner }
       );
 
+      // check what sort of change it is
+      const category = getCategories({ nextOwner, to, from });
+
       // Save transaction to database
       const nextTransaction = new Transaction({
         ...txDetails,
-        category: TransactionType.TokenSalePurchase,
+        category,
       });
-      nextTransaction.save();
+      await nextTransaction.save();
+
+      if (category === TransactionType.StakingDeposit) {
+        const nextDeposit = new Deposit({
+          owner: txDetails.from,
+          tokenId,
+          ...txDetails,
+        });
+        await nextDeposit.save();
+      }
+
+      if (category === TransactionType.StakingWithdrawal) {
+        await Deposit.findOneAndDelete({ tokenId });
+      }
     }
 
     res.status(201).json({

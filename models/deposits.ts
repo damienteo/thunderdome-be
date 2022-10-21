@@ -4,7 +4,7 @@ import { IDeposit } from "../utils/interfaces/IDeposit";
 
 const depositSchema = new mongoose.Schema<IDeposit>(
   {
-    from: {
+    owner: {
       type: String,
       required: true,
     },
@@ -14,6 +14,7 @@ const depositSchema = new mongoose.Schema<IDeposit>(
     },
     tokenId: {
       type: Number,
+      required: true,
     },
   },
   { timestamps: true }
