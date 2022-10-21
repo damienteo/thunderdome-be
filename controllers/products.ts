@@ -72,10 +72,8 @@ exports.getSingleProductJson = asyncHandler(
   }
 );
 
-//TODO: req.body is empty, but FE did send tokenId in body
-
 // @desc    Update single product owner
-// @route   PATCH /api/v1/products/:name
+// @route   PATCH /api/v1/products/
 // @access  Public
 exports.updateSingleProductOwner = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -84,7 +82,7 @@ exports.updateSingleProductOwner = asyncHandler(
     const data = await Product.findOne({ tokenId });
     if (!data) {
       return next(
-        new ErrorResponse(`Product by name of '${name}' not found`, 404)
+        new ErrorResponse(`Product by tokenId of '${tokenId}' not found`, 404)
       );
     }
 

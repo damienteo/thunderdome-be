@@ -3,7 +3,7 @@ const ethers = require("ethers");
 const ThunderDomeNFTJson = require("../abis/ThunderDomeNFT.json");
 const { Product } = require("../../models/products");
 
-require("dotenv").config();
+require("dotenv").config(".env.dev");
 
 const { WEB_SOCKET_PROVIDER, THUNDERDOME_NFT_ADDRESS } = process.env;
 

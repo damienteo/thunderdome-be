@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "NODE_ENV=dev nodemon server.ts",
-    "prod": "nodemon server.ts",
+    "prod": "NODE_ENV=prod nodemon server.ts",
     "build": "tsc",
     "start": "node ./dist/server.js",
     "seed": "ts-node scripts/seed-pokemon.ts",

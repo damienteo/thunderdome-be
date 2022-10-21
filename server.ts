@@ -5,15 +5,20 @@ import cors from "cors";
 import { listenForTransfer } from "./utils/listeners/transferListener";
 import { errorHandler } from "./middleware/errorHandler";
 
-const path = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env";
+const { NODE_ENV } = process.env;
+
+const path = NODE_ENV ? `.env.${NODE_ENV}` : ".env";
 
 require("dotenv").config({ path });
 
 const { DB_URL, PORT } = process.env;
 
+console.log({ NODE_ENV, DB_URL });
+
 // Routes
 const products = require("./routes/products");
 const transactions = require("./routes/transactions");
+const deposits = require("./routes/deposits");
 
 const app = express();
 app.use(cors());
@@ -25,6 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 // Mount Routers
 app.use("/api/v1/products", products);
 app.use("/api/v1/transactions", transactions);
+app.use("/api/v1/deposits", deposits);
 
 // Handle cases where errors are thrown
 app.use(errorHandler);
