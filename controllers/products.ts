@@ -32,7 +32,7 @@ const contract = new ethers.Contract(
 // @access  Public
 exports.getProducts = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const data = await Product.find({ ...req.body }).sort({ tokenId: 1 });
+    const data = await Product.find({ ...req.body });
 
     res.status(200).json({
       success: true,
