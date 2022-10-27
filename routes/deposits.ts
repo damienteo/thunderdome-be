@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.route("/").post(getDeposits);
 
-// router.route("/add").post(createDeposit);
+router.route("/add").post(createDeposit);
 
-// router.route("/add").post(removeDeposit);
+router.route("/remove").delete(removeDeposit);
 
 module.exports = router;

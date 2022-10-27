@@ -78,23 +78,6 @@ exports.getSingleProductJson = asyncHandler(
   }
 );
 
-const getCategories = (props: {
-  nextOwner?: string;
-  prevOwner?: string;
-  from?: string;
-  to?: string;
-}) => {
-  const { nextOwner, to, from } = props;
-
-  if (nextOwner === POKEMON_CENTER_ADDRESS)
-    return TransactionType.StakingDeposit;
-
-  if (to === POKEMON_CENTER_ADDRESS && nextOwner === from)
-    return TransactionType.StakingWithdrawal;
-
-  return TransactionType.TokenSalePurchase;
-};
-
 // @desc    Update single product owner
 // @route   PATCH /api/v1/products/
 // @access  Public
@@ -110,7 +93,6 @@ exports.updateSingleProductOwner = asyncHandler(
     }
 
     const nextOwner = await contract.ownerOf(tokenId);
-    const { to, from } = txDetails;
 
     let result;
     // verify that there had been a change
@@ -121,28 +103,12 @@ exports.updateSingleProductOwner = asyncHandler(
         { owner: nextOwner }
       );
 
-      // check what sort of change it is
-      const category = getCategories({ nextOwner, to, from });
-
       // Save transaction to database
       const nextTransaction = new Transaction({
         ...txDetails,
-        category,
+        category: TransactionType.TokenSalePurchase,
       });
       await nextTransaction.save();
-
-      if (category === TransactionType.StakingDeposit) {
-        const nextDeposit = new Deposit({
-          owner: txDetails.from,
-          tokenId,
-          ...txDetails,
-        });
-        await nextDeposit.save();
-      }
-
-      if (category === TransactionType.StakingWithdrawal) {
-        await Deposit.findOneAndDelete({ tokenId });
-      }
     }
 
     res.status(201).json({

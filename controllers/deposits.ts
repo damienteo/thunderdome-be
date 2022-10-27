@@ -43,7 +43,7 @@ exports.getDeposits = asyncHandler(
 );
 
 // @desc    Add single deposit
-// @route   POST /api/v1/deposits/
+// @route   POST /api/v1/deposits/add
 // @access  Public
 exports.createDeposit = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -60,26 +60,30 @@ exports.createDeposit = asyncHandler(
     let result;
     if (nextOwner !== data.owner) {
       // Update owner for token id
+      // Matches onchain info
       result = await Product.findOneAndUpdate(
         { tokenId },
         { owner: nextOwner }
       );
 
-      // Save deposit to Database
       if (nextOwner === POKEMON_CENTER_ADDRESS) {
+        // Save deposit to Database
         const nextDeposit = new Deposit({
+          // Owner as in real owner who staked
+          // Even though token is now in the staking contract
+          owner: txDetails.from,
+          transactionHash: txDetails.transactionHash,
+          tokenId,
+        });
+        nextDeposit.save();
+
+        // Save transaction to database
+        const nextTransaction = new Transaction({
           ...txDetails,
           category: TransactionType.StakingDeposit,
         });
-        nextDeposit.save();
+        nextTransaction.save();
       }
-
-      // Save transaction to database
-      const nextTransaction = new Transaction({
-        ...txDetails,
-        category: TransactionType.StakingDeposit,
-      });
-      nextTransaction.save();
     }
 
     res.status(201).json({
@@ -90,7 +94,7 @@ exports.createDeposit = asyncHandler(
 );
 
 // @desc    Remove single deposit
-// @route   DELETE /api/v1/deposits/
+// @route   DELETE /api/v1/deposits/remove
 // @access  Public
 exports.removeDeposit = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -109,17 +113,17 @@ exports.removeDeposit = asyncHandler(
       // Update owner for token id
       await Product.findOneAndUpdate({ tokenId }, { owner: nextOwner });
 
-      // Remove from Database
       if (nextOwner !== POKEMON_CENTER_ADDRESS) {
+        // Remove from Database
         await Deposit.findOneAndDelete({ tokenId });
-      }
 
-      // Save transaction to database
-      const nextTransaction = new Transaction({
-        ...txDetails,
-        category: TransactionType.StakingDeposit,
-      });
-      nextTransaction.save();
+        // Save transaction to database
+        const nextTransaction = new Transaction({
+          ...txDetails,
+          category: TransactionType.StakingWithdrawal,
+        });
+        nextTransaction.save();
+      }
     }
 
     res.status(201).json({
