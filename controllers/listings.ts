@@ -34,15 +34,16 @@ const marketPlaceContract = new ethers.Contract(
 // @access  Public
 exports.getListings = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const data = await Listing.find({ ...req.body }).sort({ _id: 1 });
+    const listings = await Listing.find({ ...req.body }).sort({ _id: 1 });
 
     const nextData = await Promise.all(
-      data.map(async ({ tokenId }) => await Product.find({ tokenId }))
+      listings.map(async ({ tokenId }) => await Product.find({ tokenId }))
     );
 
     res.status(200).json({
       success: true,
       data: nextData.flat(),
+      details: listings,
     });
   }
 );

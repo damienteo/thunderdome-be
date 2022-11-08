@@ -14,9 +14,9 @@ router.route("/").post(getListings);
 
 router.route("/add").post(createListing);
 
-router.route("/update").post(updateListing);
+router.route("/update").patch(updateListing);
 
-router.route("/complete").post(completeListing);
+router.route("/complete").delete(completeListing);
 
 router.route("/remove").delete(removeListing);
 
