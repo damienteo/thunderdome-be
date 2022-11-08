@@ -19,6 +19,7 @@ console.log({ NODE_ENV, DB_URL });
 const products = require("./routes/products");
 const transactions = require("./routes/transactions");
 const deposits = require("./routes/deposits");
+const listings = require("./routes/listings");
 
 const app = express();
 app.use(cors());
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/v1/products", products);
 app.use("/api/v1/transactions", transactions);
 app.use("/api/v1/deposits", deposits);
+app.use("/api/v1/listings", listings);
 
 // Handle cases where errors are thrown
 app.use(errorHandler);
