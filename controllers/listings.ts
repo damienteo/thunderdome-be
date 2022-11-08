@@ -97,7 +97,7 @@ exports.createListing = asyncHandler(
 );
 
 // @desc    Update single listing
-// @route   PATCH /api/v1/listings/add
+// @route   PATCH /api/v1/listings/update
 // @access  Public
 exports.updateListing = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -127,7 +127,7 @@ exports.updateListing = asyncHandler(
         if (buyer !== txDetails.from && buyerDeposit !== txDetails.buyerDeposit)
           throw new Error("Incorrect transaction Details");
 
-        await Product.findOneAndUpdate({ tokenId }, { buyer, buyerDeposit });
+        await Listing.findOneAndUpdate({ tokenId }, { buyer, buyerDeposit });
 
         // Save transaction to database
         const nextTransaction = new Transaction({
