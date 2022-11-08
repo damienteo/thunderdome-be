@@ -57,14 +57,11 @@ exports.createDeposit = asyncHandler(
     }
 
     const nextOwner = await contract.ownerOf(tokenId);
-    let result;
+
     if (nextOwner !== data.owner) {
       // Update owner for token id
       // Matches onchain info
-      result = await Product.findOneAndUpdate(
-        { tokenId },
-        { owner: nextOwner }
-      );
+      await Product.findOneAndUpdate({ tokenId }, { owner: nextOwner });
 
       if (nextOwner === POKEMON_CENTER_ADDRESS) {
         // Save deposit to Database
