@@ -146,7 +146,7 @@ exports.updateListing = asyncHandler(
 );
 
 // @desc    Complete single listing
-// @route   PATCH /api/v1/listings/add
+// @route   DELETE /api/v1/listings/complete
 // @access  Public
 exports.completeListing = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -161,7 +161,7 @@ exports.completeListing = asyncHandler(
 
     const nextOwner = await contract.ownerOf(tokenId);
     let result;
-    if (nextOwner !== data.owner) {
+    if (nextOwner !== data.owner && nextOwner !== MARKETPLACE_ADDRESS) {
       // Update owner for token id
       // Matches onchain info
       result = await Product.findOneAndUpdate(
@@ -169,25 +169,14 @@ exports.completeListing = asyncHandler(
         { owner: nextOwner }
       );
 
-      if (nextOwner === MARKETPLACE_ADDRESS) {
-        // TODO: Remove from listing
-        // // Save listing to Database
-        // const nextListing = new Listing({
-        //   // Owner as in real owner who staked
-        //   // Even though token is now in the staking contract
-        //   owner: txDetails.from,
-        //   transactionHash: txDetails.transactionHash,
-        //   tokenId,
-        // });
-        // nextListing.save();
+      await Listing.findOneAndDelete({ tokenId });
 
-        // Save transaction to database
-        const nextTransaction = new Transaction({
-          ...txDetails,
-          category: TransactionType.MarketPlaceComplete,
-        });
-        nextTransaction.save();
-      }
+      // Save transaction to database
+      const nextTransaction = new Transaction({
+        ...txDetails,
+        category: TransactionType.MarketPlaceComplete,
+      });
+      nextTransaction.save();
     }
 
     res.status(201).json({
@@ -236,7 +225,3 @@ exports.removeListing = asyncHandler(
     });
   }
 );
-
-// updateListing
-
-// completeListing
