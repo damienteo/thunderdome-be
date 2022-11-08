@@ -52,8 +52,7 @@ exports.getListings = asyncHandler(
 // @access  Public
 exports.createListing = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { tokenId, txDetails } = req.body;
-
+    const { tokenId, txDetails, offerPrice } = req.body;
     const data = await Product.findOne({ tokenId });
     if (!data) {
       return next(
@@ -74,20 +73,18 @@ exports.createListing = asyncHandler(
       if (nextOwner === MARKETPLACE_ADDRESS) {
         // Save listing to Database
         const nextListing = new Listing({
-          // Owner as in real owner who staked
-          // Even though token is now in the staking contract
-          owner: txDetails.from,
-          transactionHash: txDetails.transactionHash,
+          seller: txDetails.from,
           tokenId,
+          offerPrice,
         });
-        nextListing.save();
+        await nextListing.save();
 
         // Save transaction to database
         const nextTransaction = new Transaction({
           ...txDetails,
           category: TransactionType.MarketPlaceListing,
         });
-        nextTransaction.save();
+        await nextTransaction.save();
       }
     }
 
@@ -172,20 +169,21 @@ exports.completeListing = asyncHandler(
       );
 
       if (nextOwner === MARKETPLACE_ADDRESS) {
-        // Save listing to Database
-        const nextListing = new Listing({
-          // Owner as in real owner who staked
-          // Even though token is now in the staking contract
-          owner: txDetails.from,
-          transactionHash: txDetails.transactionHash,
-          tokenId,
-        });
-        nextListing.save();
+        // TODO: Remove from listing
+        // // Save listing to Database
+        // const nextListing = new Listing({
+        //   // Owner as in real owner who staked
+        //   // Even though token is now in the staking contract
+        //   owner: txDetails.from,
+        //   transactionHash: txDetails.transactionHash,
+        //   tokenId,
+        // });
+        // nextListing.save();
 
         // Save transaction to database
         const nextTransaction = new Transaction({
           ...txDetails,
-          category: TransactionType.MarketPlaceListing,
+          category: TransactionType.MarketPlaceComplete,
         });
         nextTransaction.save();
       }
