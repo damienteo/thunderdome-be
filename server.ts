@@ -20,6 +20,7 @@ const products = require("./routes/products");
 const transactions = require("./routes/transactions");
 const deposits = require("./routes/deposits");
 const listings = require("./routes/listings");
+const arena = require("./routes/arena");
 
 const app = express();
 app.use(cors());
@@ -33,6 +34,7 @@ app.use("/api/v1/products", products);
 app.use("/api/v1/transactions", transactions);
 app.use("/api/v1/deposits", deposits);
 app.use("/api/v1/listings", listings);
+app.use("/api/v1/arena", arena);
 
 // Handle cases where errors are thrown
 app.use(errorHandler);

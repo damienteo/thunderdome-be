@@ -5,7 +5,7 @@ import { Transaction } from "../models/transactions";
 const asyncHandler = require("../utils/methods/asyncHandler");
 
 // @desc    Get transactions by address
-// @route   GET /api/v1/transactions
+// @route   POST /api/v1/transactions
 // @access  Public
 exports.getTransactions = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
