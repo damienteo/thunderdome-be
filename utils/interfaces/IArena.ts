@@ -3,3 +3,9 @@ export enum PokemonType {
   FIRE = "Fire",
   WATER = "Water",
 }
+
+export enum ArenaOutcome {
+  WIN = "Victory",
+  LOSE = "Loss",
+  DRAW = "Draw",
+}
