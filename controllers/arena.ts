@@ -59,39 +59,41 @@ exports.enterArena = asyncHandler(
 
     const outcome: string = winConditions[type][serverDecision];
 
-    // Log game score with SC
+    if (outcome === ArenaOutcome.WIN) {
+      // Log game score with SC
 
-    const { chainId } = await provider.getNetwork();
+      const { chainId } = await provider.getNetwork();
 
-    const walletAddress = await signer.getAddress();
+      const walletAddress = await signer.getAddress();
 
-    const estimatedGasLimit = await arenaContract.estimateGas.logGameScore(
-      address,
-      1
-    );
+      const estimatedGasLimit = await arenaContract.estimateGas.logGameScore(
+        address,
+        1
+      );
 
-    const unsignedTransaction =
-      await arenaContract.populateTransaction.logGameScore(address, 1);
-    unsignedTransaction.chainId = chainId;
-    unsignedTransaction.gasLimit = estimatedGasLimit;
-    unsignedTransaction.gasPrice = await provider.getGasPrice();
-    unsignedTransaction.nonce = await provider.getTransactionCount(
-      walletAddress
-    );
+      const unsignedTransaction =
+        await arenaContract.populateTransaction.logGameScore(address, 1);
+      unsignedTransaction.chainId = chainId;
+      unsignedTransaction.gasLimit = estimatedGasLimit;
+      unsignedTransaction.gasPrice = await provider.getGasPrice();
+      unsignedTransaction.nonce = await provider.getTransactionCount(
+        walletAddress
+      );
 
-    const approveTxSigned = await signer.signTransaction(unsignedTransaction);
+      const approveTxSigned = await signer.signTransaction(unsignedTransaction);
 
-    const submittedTx = await provider.sendTransaction(approveTxSigned);
-    const approveReceipt = await submittedTx.wait();
+      const submittedTx = await provider.sendTransaction(approveTxSigned);
+      const approveReceipt = await submittedTx.wait();
 
-    if (approveReceipt.status === 0) {
-      res.status(500).json({
-        success: false,
-        error: "Approve Transaction Failed",
-      });
+      if (approveReceipt.status === 0) {
+        res.status(500).json({
+          success: false,
+          error: "Approve Transaction Failed",
+        });
+      }
+
+      // End of interaction with SC
     }
-
-    // End of interaction with SC
 
     const data = { outcome, serverAction: serverDecision };
 
