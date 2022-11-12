@@ -131,14 +131,14 @@ exports.claimExpPoints = asyncHandler(
     // In addition, claiming between multiple logging of game scores also 'batches' the claiming of exp points, resulting in gas savings
     const estimatedGasLimit = await arenaContract.estimateGas.claimPrize(
       address,
-      score,
+      claimable,
       signature
     );
 
     const unsignedTransaction =
       await arenaContract.populateTransaction.claimPrize(
         address,
-        score,
+        claimable,
         signature
       );
     unsignedTransaction.chainId = chainId;
