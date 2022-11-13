@@ -12,11 +12,7 @@ const provider = new ethers.providers.WebSocketProvider(WEB_SOCKET_PROVIDER);
 
 const signer = new ethers.Wallet(DUMMY_KEY, provider);
 
-const arenaContract = new ethers.Contract(
-  ARENA_ADDRESS,
-  ArenaJson.abi,
-  provider
-);
+const arenaContract = new ethers.Contract(ARENA_ADDRESS, ArenaJson.abi, signer);
 
 const getRandomIntTo2 = () => {
   return Math.floor(Math.random() * 3);
