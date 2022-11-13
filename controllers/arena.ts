@@ -65,7 +65,7 @@ exports.enterArena = asyncHandler(
       const { chainId } = await provider.getNetwork();
 
       const walletAddress = await signer.getAddress();
-
+      console.log({ chainId, walletAddress });
       const estimatedGasLimit = await arenaContract.estimateGas.logGameScore(
         address,
         1
@@ -114,7 +114,7 @@ exports.claimExpPoints = asyncHandler(
     next: NextFunction
   ) => {
     const { address } = req.body;
-
+    console.log("Claiming");
     const { chainId } = await provider.getNetwork();
 
     const score = await arenaContract.gameScores(address);
@@ -153,6 +153,8 @@ exports.claimExpPoints = asyncHandler(
     const approveTxSigned = await signer.signTransaction(unsignedTransaction);
     const submittedTx = await provider.sendTransaction(approveTxSigned);
     const approveReceipt = await submittedTx.wait();
+
+    console.log("claim complete");
 
     if (approveReceipt.status === 0) {
       res.status(500).json({
